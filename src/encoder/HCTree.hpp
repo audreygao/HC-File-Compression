@@ -1,7 +1,7 @@
 /**
- * TODO: file header
- *
- * Author:
+ * Author: Ya Gao, Qingyang Xu
+ * Email: yag003@ucsd.edu, q4xu@ucsd.edu
+ * Description:
  */
 #ifndef HCTREE_HPP
 #define HCTREE_HPP
@@ -23,7 +23,7 @@ class HCTree {
 
   public:
     /* TODO: add function header and implement */
-    HCTree() {}
+    HCTree() { root = nullptr; }
 
     /* TODO: add function header */
     ~HCTree();

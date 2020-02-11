@@ -1,7 +1,7 @@
 /**
- * TODO: file header
- *
- * Author:
+ * Author: Ya Gao, Qingyang Xu
+ * Email: yag003@ucsd.edu, q4xu@ucsd.edu
+ * Description:
  */
 #ifndef HCNODE_HPP
 #define HCNODE_HPP
@@ -41,6 +41,14 @@ ostream& operator<<(ostream& stm, const HCNode& n) {
  */
 struct HCNodePtrComp {
     /* TODO */
-    bool operator()(HCNode*& lhs, HCNode*& rhs) const { return false; }
+    bool operator()(HCNode*& lhs, HCNode*& rhs) const {
+        // count is different: return lower count
+        if (lhs->count != rhs->count) {
+            return lhs->count > rhs->count;
+        }
+
+        // count is the same: return node with larger ascii symbol
+        return lhs->symbol < rhs->symbol;
+    }
 };
 #endif  // HCNODE_HPP
