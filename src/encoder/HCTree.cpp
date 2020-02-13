@@ -24,16 +24,12 @@ HCTree::~HCTree() { deleteAll(root); }
 void HCTree::build(const vector<unsigned int>& freqs) {
     priority_queue<HCNode*, vector<HCNode*>, HCNodePtrComp> pq;
 
-    std::cout << "h1" << endl;
     for (int i = 0; i < freqs.size(); i++) {
         if (freqs.at(i) != 0) {
-            std::cout << "h2" << endl;
             pq.push(new HCNode(freqs.at(i), i, 0, 0, 0));
         }
     }
     while (pq.size() > 1) {
-        std::cout << "h3" << endl;
-
         // pop the first two node with lowest freq
         HCNode* n0 = pq.top();
         pq.pop();
@@ -59,12 +55,10 @@ void HCTree::build(const vector<unsigned int>& freqs) {
 
         // push new parent node to pq
         pq.push(parent);
-        std::cout << "h4" << endl;
     }
 
     // only 1 node in pq: is root
     root = pq.top();
-    std::cout << "done running build" << endl;
 }
 
 /* TODO */
@@ -92,6 +86,7 @@ void HCTree::encode(byte symbol, ostream& out) const {
                 }
 
                 // set par to its parent
+                node = par;
                 par = par->p;
             }
             break;  // break out of for loop
@@ -111,7 +106,6 @@ void HCTree::encode(byte symbol, ostream& out) const {
 byte HCTree::decode(istream& in) const {
     // start from the root to traverse down to leave
     HCNode* cur = root;
-    HCNode* leave;
     unsigned char nextChar;
     // loop till the leave
     while (cur != nullptr) {
@@ -119,15 +113,16 @@ byte HCTree::decode(istream& in) const {
 
         // decide which branch to go
         if (nextChar == '0') {
-            leave = cur;
             cur = cur->c0;
 
         } else {
-            leave = cur;
             cur = cur->c1;
+        }
+        if (cur->c1 == 0 && cur->c0 == 0) {
+            break;
         }
     }
 
     // return founded leave
-    return leave->symbol;
+    return cur->symbol;
 }

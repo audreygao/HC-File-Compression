@@ -16,19 +16,18 @@
 void pseudoDecompression(string inFileName, string outFileName) {
     HCTree* tree = new HCTree();
     vector<unsigned int> vec(256, 0);
-    ifstream theFile;
+    ifstream inFile;
     string str;
-    theFile.open(inFileName);
+    inFile.open(inFileName);
 
     // loop through the vector and add the count
     for (int i = 0; i < vec.size(); i++) {
         // get the line without nextline char
-        getline(theFile, str);
+        getline(inFile, str);
         str.substr(0, str.size() - 1);
 
         // convert str to number and add to vector
         vec[i] = stoi(str);
-        std::cout << vec[i] << endl;
     }
 
     tree->build(vec);
@@ -36,12 +35,12 @@ void pseudoDecompression(string inFileName, string outFileName) {
     ofstream outFile;
     outFile.open(outFileName);
     while (1) {
-        byte symbol = tree->decode(theFile);
-        if (theFile.eof()) break;
+        byte symbol = tree->decode(inFile);
+        if (inFile.eof()) break;
         outFile.put(symbol);
     }
     outFile.close();
-    theFile.close();
+    inFile.close();
 }
 
 /* TODO: True decompression with bitwise i/o and small header (final) */
