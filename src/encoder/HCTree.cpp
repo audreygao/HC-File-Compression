@@ -10,6 +10,9 @@ using namespace std;
 /* TODO */
 
 void deleteAll(HCNode* node) {
+    if (node == 0) {
+        return;
+    }
     deleteAll(node->c0);
     deleteAll(node->c1);
     delete (node);
@@ -21,13 +24,17 @@ HCTree::~HCTree() { deleteAll(root); }
 void HCTree::build(const vector<unsigned int>& freqs) {
     priority_queue<HCNode*, vector<HCNode*>, HCNodePtrComp> pq;
 
+    std::cout << "1" << endl;
     for (int i = 0; i < freqs.size(); i++) {
         if (freqs.at(i) != 0) {
+            std::cout << "2" << endl;
             pq.push(new HCNode(freqs.at(i), i, 0, 0, 0));
         }
     }
 
     while (pq.size() > 1) {
+        std::cout << "3" << endl;
+
         // pop the first two node with lowest freq
         HCNode* n0 = pq.top();
         pq.pop();
@@ -53,10 +60,12 @@ void HCTree::build(const vector<unsigned int>& freqs) {
 
         // push new parent node to pq
         pq.push(parent);
+        std::cout << "4" << endl;
     }
 
     // only 1 node in pq: is root
     root = pq.top();
+    std::cout << "done running build" << endl;
 }
 
 /* TODO */

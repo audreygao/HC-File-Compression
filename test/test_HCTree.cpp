@@ -15,7 +15,7 @@ class SimpleHCTreeFixture : public ::testing::Test {
   public:
     SimpleHCTreeFixture() {
         // initialization code here
-        vector<unsigned int> freqs(256);
+        vector<unsigned int> freqs(256, 0);
         freqs['a'] = 2;
         freqs['b'] = 3;
         tree.build(freqs);
