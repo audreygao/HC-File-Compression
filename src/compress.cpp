@@ -14,40 +14,35 @@
 /* TODO: add pseudo compression with ascii encoding and naive header
  * (checkpoint) */
 void pseudoCompression(string inFileName, string outFileName) {
-    std::cout << "1" << endl;
     HCTree* tree = new HCTree();
 
     ifstream theFile;
     unsigned char nextChar;
-    theFile.open("inFileName");
-    vector<unsigned int> vector(256, 0);
-    while (1) {
-        nextChar = theFile.get();
-        if (theFile.eof()) {
-            break;
-        }
-        std::cout << nextChar << endl;
-        vector[nextChar]++;
+    int nextByte;
+    theFile.open(inFileName, ios::binary);
+    vector<unsigned int> vec(256);
+    while ((nextByte = theFile.get()) != EOF) {
+        nextChar = (unsigned int)nextByte;
+        vec.at(nextChar) += 1;
     }
-    std::cout << "2" << endl;
 
     theFile.close();
-    tree->build(vector);
+
+    tree->build(vec);
     ofstream outFile;
     outFile.open(outFileName);
-    for (int i : vector) {
+    for (int i : vec) {
         outFile << i;
         outFile << '\n';
     }
-    std::cout << "3" << endl;
 
-    theFile.open("inFileName");
+    theFile.open(inFileName);
     while (1) {
         nextChar = theFile.get();
         if (theFile.eof()) break;
         tree->encode(nextChar, outFile);
     }
-    std::cout << "4" << endl;
+    theFile.close();
 
     outFile.close();
 }
@@ -82,7 +77,6 @@ int main(int argc, char* argv[]) {
     // ours
 
     if (isAsciiOutput) {
-        std::cout << "call pseudo" << endl;
         pseudoCompression(inFileName, outFileName);
     }
 }

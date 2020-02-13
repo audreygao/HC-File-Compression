@@ -9,6 +9,7 @@
 #include "FileUtils.hpp"
 #include "HCNode.hpp"
 #include "HCTree.hpp"
+#include "cxxopts.hpp"
 
 /* TODO: Pseudo decompression with ascii encoding and naive header (checkpoint)
  */
@@ -17,7 +18,7 @@ void pseudoDecompression(string inFileName, string outFileName) {
     vector<unsigned int> vec(256, 0);
     ifstream theFile;
     string str;
-    theFile.open("inFileName");
+    theFile.open(inFileName);
 
     // loop through the vector and add the count
     for (int i = 0; i < vec.size(); i++) {
@@ -27,6 +28,7 @@ void pseudoDecompression(string inFileName, string outFileName) {
 
         // convert str to number and add to vector
         vec[i] = stoi(str);
+        std::cout << vec[i] << endl;
     }
 
     tree->build(vec);
@@ -47,11 +49,29 @@ void trueDecompression(string inFileName, string outFileName) {}
 
 /* TODO: Main program that runs the uncompress */
 int main(int argc, char* argv[]) {
-    const int NUM_ARG = 3;
-    if (argc != NUM_ARG) {
-        return -1;
+    cxxopts::Options options("./uncompress",
+                             "Uncompresses files using Huffman Encoding");
+    options.positional_help("./path_to_input_file ./path_to_output_file");
+
+    bool isAsciiOutput = false;
+    string inFileName, outFileName;
+    options.allow_unrecognised_options().add_options()(
+        "ascii", "Write output in ascii mode instead of bit stream",
+        cxxopts::value<bool>(isAsciiOutput))(
+        "input", "", cxxopts::value<string>(inFileName))(
+        "output", "", cxxopts::value<string>(outFileName))(
+        "h,help", "Print help and exit");
+
+    options.parse_positional({"input", "output"});
+    auto userOptions = options.parse(argc, argv);
+
+    if (userOptions.count("help") || !FileUtils::isValidFile(inFileName) ||
+        outFileName.empty()) {
+        cout << options.help({""}) << std::endl;
+        return 0;
     }
-    if (argv[0] == "--ascii") {
-        pseudoDecompression(argv[1], argv[2]);
+
+    if (isAsciiOutput) {
+        pseudoDecompression(inFileName, outFileName);
     }
 }
