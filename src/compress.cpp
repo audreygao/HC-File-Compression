@@ -30,7 +30,7 @@ void pseudoCompression(string inFileName, string outFileName) {
 
     tree->build(vec);
     ofstream outFile;
-    outFile.open(outFileName);
+    outFile.open(outFileName, ios::trunc);
     for (int i : vec) {
         outFile << i;
         outFile << '\n';

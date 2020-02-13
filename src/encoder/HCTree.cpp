@@ -67,6 +67,12 @@ void HCTree::build(const vector<unsigned int>& freqs) {
 /* TODO */
 void HCTree::encode(byte symbol, ostream& out) const {
     vector<char> vec;
+
+    if (root->c0 == 0 && root->c1 == 0) {
+        out.put('0');
+        return;
+    }
+
     // find node ptr with the symbol
     for (int i = 0; i < leaves.size(); i++) {
         // node ptr found
@@ -104,6 +110,11 @@ void HCTree::encode(byte symbol, ostream& out) const {
 
 /* TODO */
 byte HCTree::decode(istream& in) const {
+    if (root->c0 == 0 && root->c1 == 0) {
+        in.get();
+        return root->symbol;
+    }
+
     // start from the root to traverse down to leave
     HCNode* cur = root;
     unsigned char nextChar;
