@@ -58,7 +58,9 @@ void HCTree::build(const vector<unsigned int>& freqs) {
     }
 
     // only 1 node in pq: is root
-    root = pq.top();
+    if (pq.size() == 1) {
+        root = pq.top();
+    }
 }
 
 /* TODO */
@@ -137,3 +139,5 @@ byte HCTree::decode(istream& in) const {
     // return founded leave
     return cur->symbol;
 }
+
+bool HCTree::empty() { return root == 0; }

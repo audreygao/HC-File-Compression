@@ -14,6 +14,15 @@
 /* TODO: add pseudo compression with ascii encoding and naive header
  * (checkpoint) */
 void pseudoCompression(string inFileName, string outFileName) {
+    // if input is emptyfile, outfile will be empty
+    if (FileUtils::isEmptyFile(inFileName)) {
+        std::cout << "empty file" << endl;
+        ofstream outFile;
+        outFile.open(outFileName);
+        outFile.close();
+        return;
+    }
+
     HCTree* tree = new HCTree();
 
     ifstream theFile;
@@ -29,8 +38,10 @@ void pseudoCompression(string inFileName, string outFileName) {
     theFile.close();
 
     tree->build(vec);
+
     ofstream outFile;
     outFile.open(outFileName, ios::trunc);
+
     for (int i : vec) {
         outFile << i;
         outFile << '\n';
@@ -45,6 +56,7 @@ void pseudoCompression(string inFileName, string outFileName) {
     theFile.close();
 
     outFile.close();
+    delete tree;
 }
 
 /* TODO: True compression with bitwise i/o and small header (final) */

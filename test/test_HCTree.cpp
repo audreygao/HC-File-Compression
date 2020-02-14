@@ -18,6 +18,7 @@ class SimpleHCTreeFixture : public ::testing::Test {
         vector<unsigned int> freqs(256, 0);
         freqs['a'] = 2;
         freqs['b'] = 3;
+        freqs['c'] = 3;
         tree.build(freqs);
     }
 };
@@ -25,10 +26,19 @@ class SimpleHCTreeFixture : public ::testing::Test {
 TEST_F(SimpleHCTreeFixture, TEST_ENCODE) {
     ostringstream os;
     tree.encode('a', os);
-    ASSERT_EQ(os.str(), "0");
+    ASSERT_EQ(os.str(), "10");
+}
+TEST_F(SimpleHCTreeFixture, TEST_ENCODE_2) {
+    ostringstream os;
+    tree.encode('ab', os);
+    ASSERT_EQ(os.str(), "1011");
 }
 
 TEST_F(SimpleHCTreeFixture, TEST_DECODE) {
-    istringstream is("1");
+    istringstream is("0");
+    ASSERT_EQ(tree.decode(is), 'c');
+    istringstream is("10");
+    ASSERT_EQ(tree.decode(is), 'a');
+    istringstream is("11");
     ASSERT_EQ(tree.decode(is), 'b');
 }

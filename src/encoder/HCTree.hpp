@@ -42,6 +42,8 @@ class HCTree {
 
     /* TODO: add function header */
     byte decode(istream& in) const;
+
+    bool empty();
 };
 
 #endif  // HCTREE_HPP

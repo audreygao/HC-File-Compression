@@ -14,6 +14,13 @@
 /* TODO: Pseudo decompression with ascii encoding and naive header (checkpoint)
  */
 void pseudoDecompression(string inFileName, string outFileName) {
+    // if input is emptyfile, outfile will be empty
+    if (FileUtils::isEmptyFile(inFileName)) {
+        ofstream outFile;
+        outFile.open(outFileName);
+        outFile.close();
+    }
+
     HCTree* tree = new HCTree();
     vector<unsigned int> vec(256, 0);
     ifstream inFile;
@@ -31,8 +38,8 @@ void pseudoDecompression(string inFileName, string outFileName) {
     }
 
     tree->build(vec);
-
     ofstream outFile;
+
     outFile.open(outFileName);
     while (1) {
         byte symbol = tree->decode(inFile);
@@ -41,6 +48,7 @@ void pseudoDecompression(string inFileName, string outFileName) {
     }
     outFile.close();
     inFile.close();
+    delete tree;
 }
 
 /* TODO: True decompression with bitwise i/o and small header (final) */
