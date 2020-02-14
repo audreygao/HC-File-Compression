@@ -30,15 +30,19 @@ TEST_F(SimpleHCTreeFixture, TEST_ENCODE) {
 }
 TEST_F(SimpleHCTreeFixture, TEST_ENCODE_2) {
     ostringstream os;
-    tree.encode('ab', os);
-    ASSERT_EQ(os.str(), "1011");
+    tree.encode('b', os);
+    ASSERT_EQ(os.str(), "0");
 }
 
 TEST_F(SimpleHCTreeFixture, TEST_DECODE) {
-    istringstream is("0");
-    ASSERT_EQ(tree.decode(is), 'c');
     istringstream is("10");
     ASSERT_EQ(tree.decode(is), 'a');
-    istringstream is("11");
-    ASSERT_EQ(tree.decode(is), 'b');
+}
+TEST_F(SimpleHCTreeFixture, TEST_DECODE2) {
+    istringstream is1("0");
+    ASSERT_EQ(tree.decode(is1), 'b');
+}
+TEST_F(SimpleHCTreeFixture, TEST_DECODE3) {
+    istringstream is2("11");
+    ASSERT_EQ(tree.decode(is2), 'c');
 }
