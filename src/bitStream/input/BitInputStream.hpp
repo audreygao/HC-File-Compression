@@ -25,10 +25,20 @@ class BitInputStream {
     bool atEndOfFile();
 
   public:
-    /* TODO: add function header and implement */
-    explicit BitInputStream(istream& is, unsigned int bufSize) : in(is){};
+    /**
+     * Initializes member variables.
+     * the char array should have size bufSize.
+     */
+    explicit BitInputStream(istream& is, unsigned int bufSize) : in(is) {
+        // buf size bufsize
+        this->bufSize = bufSize;
+        nbits = 0;
+        eofBit = false;
+    };
 
-    /* TODO: add function header */
+    /**
+     * Fill the buffer of size bufSize from input stream
+     */
     void fill();
 
     /* TODO: add function header */

@@ -19,6 +19,7 @@ class BitOutputStream {
     char* buf;             // buffer of an char array
     unsigned int bufSize;  // size of buffer in byte
     unsigned int nbits;    // number of bits have been writen to buf
+    unsigned int isize;
 
   public:
     /**
@@ -26,9 +27,16 @@ class BitOutputStream {
      * param: - os: output stream to use
      *  - bufsize: char array buf's size
      */
-    explicit BitOutputStream(ostream& os, unsigned int bufSize) : out(os){};
+    explicit BitOutputStream(ostream& os, unsigned int bufSize) : out(os) {
+        // initiliaze buf array with all zeroes
+        this->bufSize = bufSize;
+        nbits = 0;
+    };
 
-    /* TODO: add function header */
+    /**
+     * Write the part of buffer that was written by the user to the output
+     * stream and clear the buffer
+     */
     void flush();
 
     /* TODO: add function header */
