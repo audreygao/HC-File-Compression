@@ -1,3 +1,9 @@
+/**
+ * Author: Ya Gao, Qingyang Xu
+ * Email: yag003@ucsd.edu, q4xu@ucsd.edu
+ * Description: contain tests for functionalities
+ * of HCTree
+ */
 #include <iostream>
 #include <string>
 #include <vector>
@@ -23,6 +29,7 @@ class SimpleHCTreeFixture : public ::testing::Test {
     }
 };
 
+// encode tests
 TEST_F(SimpleHCTreeFixture, TEST_ENCODE) {
     ostringstream os;
     tree.encode('a', os);
@@ -34,6 +41,7 @@ TEST_F(SimpleHCTreeFixture, TEST_ENCODE_2) {
     ASSERT_EQ(os.str(), "0");
 }
 
+// decode tests
 TEST_F(SimpleHCTreeFixture, TEST_DECODE) {
     istringstream is("10");
     ASSERT_EQ(tree.decode(is), 'a');

@@ -1,26 +1,36 @@
 /**
  * Author: Ya Gao, Qingyang Xu
  * Email: yag003@ucsd.edu, q4xu@ucsd.edu
- * Description:
+ * Description: include functionalites of a HCTree
  */
 #include "HCTree.hpp"
 #include <vector>
 using namespace std;
 
-/* TODO */
-
+/**
+ * helper method of destructor
+ * recursively delete all the HCNode
+ */
 void deleteAll(HCNode* node) {
+    // base case
     if (node == 0) {
         return;
     }
+
+    // delete children then itself
     deleteAll(node->c0);
     deleteAll(node->c1);
     delete (node);
 }
 
+/**destructor of HCTree **/
 HCTree::~HCTree() { deleteAll(root); }
 
-/* TODO */
+/**
+ * build the HCTree with the given vector of frequencies
+ * param: freqs - vector containing frequencies of symbol
+ * at each index
+ */
 void HCTree::build(const vector<unsigned int>& freqs) {
     priority_queue<HCNode*, vector<HCNode*>, HCNodePtrComp> pq;
 
@@ -66,7 +76,12 @@ void HCTree::build(const vector<unsigned int>& freqs) {
 /* TODO */
 // void HCTree::encode(byte symbol, BitOutputStream& out) const {}
 
-/* TODO */
+/**
+ * encode the given symbol with the HCtree
+ * and write the code to the ostream
+ * param: - symbol: symbol to be encoded
+ *  - out: ostream to write to
+ */
 void HCTree::encode(byte symbol, ostream& out) const {
     vector<char> vec;
 
@@ -110,7 +125,11 @@ void HCTree::encode(byte symbol, ostream& out) const {
 /* TODO */
 // byte HCTree::decode(BitInputStream& in) const { return ' '; }
 
-/* TODO */
+/**
+ * read from the istream and decode
+ * Return the decoded symbo
+ * param: in - istream to read from
+ */
 byte HCTree::decode(istream& in) const {
     if (root->c0 == 0 && root->c1 == 0) {
         in.get();
@@ -140,4 +159,7 @@ byte HCTree::decode(istream& in) const {
     return cur->symbol;
 }
 
+/**
+ * Return whether the HCTree is empty
+ */
 bool HCTree::empty() { return root == 0; }

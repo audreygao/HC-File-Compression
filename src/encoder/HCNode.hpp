@@ -1,7 +1,8 @@
 /**
  * Author: Ya Gao, Qingyang Xu
  * Email: yag003@ucsd.edu, q4xu@ucsd.edu
- * Description:
+ * Description: include fuctionalities of HCNode
+ * and HCNode ptr comparator
  */
 #ifndef HCNODE_HPP
 #define HCNODE_HPP
@@ -40,7 +41,11 @@ ostream& operator<<(ostream& stm, const HCNode& n) {
  * has higher prioruty.
  */
 struct HCNodePtrComp {
-    /* TODO */
+    /**
+     * comparator of HCNode pointer
+     * param: - lhs: left hand side node ptr
+     *  - rhs: right hand side node ptr
+     */
     bool operator()(HCNode*& lhs, HCNode*& rhs) const {
         // count is different: return lower count
         if (lhs->count != rhs->count) {

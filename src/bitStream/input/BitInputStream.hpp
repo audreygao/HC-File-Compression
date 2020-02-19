@@ -1,7 +1,7 @@
 /**
- * TODO: file header
- *
- * Author:
+ * Author: Ya Gao, Qingyang Xu
+ * Email: yag003@ucsd.edu, q4xu@ucsd.edu
+ * Description:
  */
 #ifndef BITINPUTSTREAM_HPP
 #define BITINPUTSTREAM_HPP

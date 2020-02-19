@@ -1,7 +1,8 @@
 /**
  * Author: Ya Gao, Qingyang Xu
  * Email: yag003@ucsd.edu, q4xu@ucsd.edu
- * Description:
+ * Description: include description of
+ * methods of a HCTree
  */
 #ifndef HCTREE_HPP
 #define HCTREE_HPP
@@ -15,34 +16,56 @@
 
 using namespace std;
 
-/** TODO: class header */
+/**
+ * a class, instances of which are HCTree
+ * built with huffman encoding method
+ */
 class HCTree {
   private:
     HCNode* root;            // the root of HCTree
     vector<HCNode*> leaves;  // a vector storing pointers to all leaf HCNodes
 
   public:
-    /* TODO: add function header and implement */
+    /**
+     * initialize an empty HCTree
+     */
     HCTree() { root = nullptr; }
 
-    /* TODO: add function header */
+    /**
+     * destructor of HCTree
+     */
     ~HCTree();
 
-    /* TODO: add function header */
+    /**
+     * build the HCTree with the given vector of frequencies
+     * param: freqs - vector containing frequencies of symbol
+     * at each index
+     */
     void build(const vector<unsigned int>& freqs);
 
     /* TODO: add function header */
     // void encode(byte symbol, BitOutputStream& out) const;
 
-    /* TODO: add function header */
+    /**
+     * encode the given symbol with the HCtree
+     * and write the code to the ostream
+     * param: - symbol: symbol to be encoded
+     *  - out: ostream to write to
+     */
     void encode(byte symbol, ostream& out) const;
 
     /* TODO: add function header */
     // byte decode(BitInputStream& in) const;
 
-    /* TODO: add function header */
+    /**
+     * read from the istream and decode
+     * Return the decoded symbo
+     * param: in - istream to read from
+     */
     byte decode(istream& in) const;
-
+    /**
+     * Return whether the HCTree is empty
+     */
     bool empty();
 };
 

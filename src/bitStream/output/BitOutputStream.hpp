@@ -1,7 +1,7 @@
 /**
- * TODO: file header
- *
- * Author:
+ * Author: Ya Gao, Qingyang Xu
+ * Email: yag003@ucsd.edu, q4xu@ucsd.edu
+ * Description:
  */
 #ifndef BITOUTPUTSTREAM_HPP
 #define BITOUTPUTSTREAM_HPP
@@ -21,7 +21,11 @@ class BitOutputStream {
     unsigned int nbits;    // number of bits have been writen to buf
 
   public:
-    /* TODO: add function header and implement */
+    /**
+     * Initializes member variables of BitOutputStream
+     * param: - os: output stream to use
+     *  - bufsize: char array buf's size
+     */
     explicit BitOutputStream(ostream& os, unsigned int bufSize) : out(os){};
 
     /* TODO: add function header */
