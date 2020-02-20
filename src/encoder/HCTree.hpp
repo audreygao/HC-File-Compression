@@ -44,7 +44,7 @@ class HCTree {
     void build(const vector<unsigned int>& freqs);
 
     /* TODO: add function header */
-    // void encode(byte symbol, BitOutputStream& out) const;
+    void encode(byte symbol, BitOutputStream& out) const;
 
     /**
      * encode the given symbol with the HCtree
@@ -55,7 +55,7 @@ class HCTree {
     void encode(byte symbol, ostream& out) const;
 
     /* TODO: add function header */
-    // byte decode(BitInputStream& in) const;
+    byte decode(BitInputStream& in) const;
 
     /**
      * read from the istream and decode

@@ -5,6 +5,7 @@
  */
 #include "HCTree.hpp"
 #include <vector>
+#include "BitOutputStream.hpp"
 using namespace std;
 
 /**
@@ -74,7 +75,45 @@ void HCTree::build(const vector<unsigned int>& freqs) {
 }
 
 /* TODO */
-// void HCTree::encode(byte symbol, BitOutputStream& out) const {}
+void HCTree::encode(byte symbol, BitOutputStream& out) const {
+    vector<unsigned int> vec;
+
+    if (root->c0 == 0 && root->c1 == 0) {
+        out.writeBit(0);
+        return;
+    }
+
+    // find node ptr with the symbol
+    for (int i = 0; i < leaves.size(); i++) {
+        // node ptr found
+        if (leaves.at(i)->symbol == symbol) {
+            HCNode* node = leaves.at(i);
+
+            HCNode* par = node->p;
+
+            // go up the HCTree till the root
+            while (par != 0) {
+                // determine if it's 0 or 1
+                if (par->c0 == node) {
+                    // add to front of vector
+                    vec.insert(vec.begin(), 0);
+                } else if (par->c1 == node) {
+                    vec.insert(vec.begin(), 1);
+                }
+
+                // set par to its parent
+                node = par;
+                par = par->p;
+            }
+            break;  // break out of for loop
+        }
+    }
+
+    // write each bit
+    for (char i : vec) {
+        out.writeBit(i);
+    }
+}
 
 /**
  * encode the given symbol with the HCtree
@@ -163,3 +202,15 @@ byte HCTree::decode(istream& in) const {
  * Return whether the HCTree is empty
  */
 bool HCTree::empty() { return root == 0; }
+
+void traverse(vector<char>& sym, vector<unsigned int>& vec, HCNode* node) {
+    if (node->c0 != 0 && node->c1 != 0) {
+        vec.push_back(1);
+        traverse(sym, vec, node->c0);
+        traverse(sym, vec, node->c1);
+    } else {
+        vec.push_back(0);
+        sym.push_back(node->symbol);
+        return;
+    }
+}

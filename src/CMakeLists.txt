@@ -1,4 +1,4 @@
-# add_subdirectory(bitStream) # Uncomment this line for final submission
+add_subdirectory(bitStream) # Uncomment this line for final submission
 add_subdirectory(encoder)
 
 add_executable (compress.cpp.executable compress.cpp FileUtils.hpp)
