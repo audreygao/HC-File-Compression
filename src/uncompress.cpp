@@ -52,7 +52,31 @@ void pseudoDecompression(string inFileName, string outFileName) {
 }
 
 /* TODO: True decompression with bitwise i/o and small header (final) */
-void trueDecompression(string inFileName, string outFileName) {}
+void trueDecompression(string inFileName, string outFileName) {
+    // if input is emptyfile, outfile will be empty
+    if (FileUtils::isEmptyFile(inFileName)) {
+        ofstream outFile;
+        outFile.open(outFileName);
+        outFile.close();
+    }
+    HCTree* tree = new HCTree();
+    ifstream inFile;
+    inFile.open(inFileName);
+
+    BitInputStream bitos(inFile, 4000);
+
+    /// get an int: TODO
+    unsigned int numSym = inFile.get() + 1;
+    vector<unsigned int> vec;
+    vector<char> sym(numSym);
+
+    // read the symbols into vector
+    for (int i = 0; i < numSym; i++) {
+        sym[i] = inFile.get();
+    }
+
+    // read structure code
+}
 
 /* TODO: Main program that runs the uncompress */
 int main(int argc, char* argv[]) {

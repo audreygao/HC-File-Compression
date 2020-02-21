@@ -60,65 +60,69 @@ void pseudoCompression(string inFileName, string outFileName) {
     delete tree;
 }
 
-// /* TODO: True compression with bitwise i/o and small header (final) */
-// void trueCompression(string inFileName, string outFileName) {
-//     // if input is emptyfile, outfile will be empty
-//     if (FileUtils::isEmptyFile(inFileName)) {
-//         std::cout << "empty file" << endl;
-//         ofstream outFile;
-//         outFile.open(outFileName);
-//         outFile.close();
-//         return;
-//     }
+/* TODO: True compression with bitwise i/o and small header (final) */
+void trueCompression(string inFileName, string outFileName) {
+    // if input is emptyfile, outfile will be empty
+    if (FileUtils::isEmptyFile(inFileName)) {
+        std::cout << "empty file" << endl;
+        ofstream outFile;
+        outFile.open(outFileName);
+        outFile.close();
+        return;
+    }
 
-//     HCTree* tree = new HCTree();
+    HCTree* tree = new HCTree();
 
-//     ifstream theFile;
-//     unsigned char nextChar;
-//     int nextByte;
-//     theFile.open(inFileName, ios::binary);
-//     vector<unsigned int> vec(256);
-//     while ((nextByte = theFile.get()) != EOF) {
-//         nextChar = (unsigned int)nextByte;
-//         vec.at(nextChar) += 1;
-//     }
+    ifstream theFile;
+    unsigned char nextChar;
+    int nextByte;
+    theFile.open(inFileName, ios::binary);
+    vector<unsigned int> vec(256);
+    while ((nextByte = theFile.get()) != EOF) {
+        nextChar = (unsigned int)nextByte;
+        vec.at(nextChar) += 1;
+    }
 
-//     theFile.close();
+    theFile.close();
 
-//     tree->build(vec);
+    tree->build(vec);
 
-//     ofstream outFile;
-//     outFile.open(outFileName, ios::trunc);
+    ofstream outFile;
+    outFile.open(outFileName, ios::trunc);
 
-//     BitOutputStream bitos(outFile, 4000);
+    BitOutputStream bitos(outFile, 4000);
 
-//     // header
-//     // write symbols from left to right to outfile
-//     // traverse the tree and write bit to buffer
-//     vector<unsigned int> vec;
-//     vector<char> sym;
-//     tree.traverse(sym, vec, tree->root);
+    // header
+    // write symbols from left to right to outfile
+    // traverse the tree and write bit to buffer
+    vector<unsigned int> vec;
+    vector<char> sym;
+    tree->traverseAll(sym, vec);
 
-//     for (each j : sym) {
-//         outFile.write(j);
-//     }
+    // write the number of symbols / 1 byte
+    outFile.put(sym.size() - 1);
 
-//     for (each i : vec) {
-//         bitos.writeBit(i);
-//     }
+    for (char j : sym) {
+        outFile.put(j);
+    }
 
-//     // body
-//     theFile.open(inFileName);
-//     while (1) {
-//         nextChar = theFile.get();
-//         if (theFile.eof()) break;
-//         tree->encode(nextChar, bitos);
-//     }
-//     theFile.close();
+    for (unsigned int i : vec) {
+        bitos.writeBit(i);
+    }
+    outFile.put('\n');
 
-//     outFile.close();
-//     delete tree;
-// }
+    // body
+    theFile.open(inFileName);
+    while (1) {
+        nextChar = theFile.get();
+        if (theFile.eof()) break;
+        tree->encode(nextChar, bitos);
+    }
+    theFile.close();
+
+    outFile.close();
+    delete tree;
+}
 
 /* TODO: Main program that runs the compress */
 int main(int argc, char* argv[]) {

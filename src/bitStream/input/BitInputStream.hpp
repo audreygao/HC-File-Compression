@@ -32,7 +32,7 @@ class BitInputStream {
     explicit BitInputStream(istream& is, unsigned int bufSize) : in(is) {
         buf = new char[bufSize];
         unsigned int zero = 0;
-        // std::fill(&buf[0], &buf[bufSize], zero);
+        std::fill(&buf[0], &buf[bufSize], zero);
         this->bufSize = bufSize;
         fill();
         nbits = 0;

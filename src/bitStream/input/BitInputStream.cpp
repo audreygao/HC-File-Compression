@@ -9,12 +9,10 @@
 /* TODO */
 void BitInputStream::fill() {
     // read <= bufsize number of bytes from istream into buf
+    unsigned int zero = 0;
+    std::fill(&buf[0], &buf[bufSize], zero);
     in.read(buf, bufSize);
     nbits = 0;
-    // std::fill(buf[0], buf[bufSize], 0);
-    // for (int i = 0; i < bufSize; i++) {
-    //     buf[i] = in.get();
-    // }
 }
 
 /**

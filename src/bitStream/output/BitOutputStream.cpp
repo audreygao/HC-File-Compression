@@ -12,7 +12,6 @@
 void BitOutputStream::flush() {
     int flushSize = nbits / 8;
     if (nbits % 8 != 0) {
-        std::cout << "will add flush size" << endl;
         flushSize++;
     }
 
@@ -26,18 +25,12 @@ void BitOutputStream::flush() {
 /* TODO */
 void BitOutputStream::writeBit(unsigned int i) {
     if (bufSize * 8 == nbits) {
-        std::cout << "will flush" << endl;
         flush();
     }
     int byteIndex = nbits / 8;
     int bitIndex = nbits % 8;
     i = i << (7 - bitIndex);
-    if (i == 128) {
-        std::cout << "i is 128" << endl;
-    }
+
     buf[byteIndex] = buf[byteIndex] | i;
-    if (buf[byteIndex] == 128) {
-        std::cout << "i is 128" << endl;
-    }
     nbits++;
 }
