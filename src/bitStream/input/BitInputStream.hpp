@@ -30,8 +30,11 @@ class BitInputStream {
      * the char array should have size bufSize.
      */
     explicit BitInputStream(istream& is, unsigned int bufSize) : in(is) {
-        // buf size bufsize
+        buf = new char[bufSize];
+        unsigned int zero = 0;
+        // std::fill(&buf[0], &buf[bufSize], zero);
         this->bufSize = bufSize;
+        fill();
         nbits = 0;
         eofBit = false;
     };
@@ -41,7 +44,9 @@ class BitInputStream {
      */
     void fill();
 
-    /* TODO: add function header */
+    /**
+     * true when we are trying to read past the end of the file
+     */
     bool eof();
 
     /* TODO: add function header */

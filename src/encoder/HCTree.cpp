@@ -5,6 +5,7 @@
  */
 #include "HCTree.hpp"
 #include <vector>
+#include "BitInputStream.hpp"
 #include "BitOutputStream.hpp"
 using namespace std;
 

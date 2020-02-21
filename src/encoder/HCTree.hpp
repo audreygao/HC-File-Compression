@@ -10,8 +10,8 @@
 #include <fstream>
 #include <queue>
 #include <vector>
-// #include "BitInputStream.hpp"
-// #include "BitOutputStream.hpp"
+#include "BitInputStream.hpp"
+#include "BitOutputStream.hpp"
 #include "HCNode.hpp"
 
 using namespace std;
