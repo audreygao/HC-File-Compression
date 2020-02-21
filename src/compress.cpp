@@ -95,9 +95,9 @@ void trueCompression(string inFileName, string outFileName) {
     // header
     // write symbols from left to right to outfile
     // traverse the tree and write bit to buffer
-    vector<unsigned int> vec;
+    vector<unsigned int> vect;
     vector<char> sym;
-    tree->traverseAll(sym, vec);
+    tree->traverseAll(sym, vect);
 
     // write the number of symbols / 1 byte
     outFile.put(sym.size() - 1);
@@ -106,7 +106,7 @@ void trueCompression(string inFileName, string outFileName) {
         outFile.put(j);
     }
 
-    for (unsigned int i : vec) {
+    for (unsigned int i : vect) {
         bitos.writeBit(i);
     }
     outFile.put('\n');
