@@ -15,7 +15,6 @@ void BitOutputStream::flush() {
         flushSize++;
     }
     out.write(buf, flushSize);
-    stopBit = nbits % 8;
     nbits = 0;
     unsigned int zero = 0;
     std::fill(&buf[0], &buf[bufSize], zero);

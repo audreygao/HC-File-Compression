@@ -93,7 +93,7 @@ void trueDecompression(string inFileName, string outFileName) {
     BitInputStream* headerIn = new BitInputStream(inFile, 800, charBuf);
     // BitInputStream headerIn(inFile, 800, charBuf);
 
-    vector<char> sym;
+    vector<unsigned char> sym;
     vector<unsigned int> vec;
     unsigned int bit = 0;
     unsigned int character = 0;
@@ -104,11 +104,11 @@ void trueDecompression(string inFileName, string outFileName) {
 
         if (bit == 0) {
             character = 0;
-            for (int i = 0; i < 8; i++) {
+            for (int i = 7; i >= 0; i--) {
                 bit = headerIn->readBitHeader();
-                character += bit * pow(2, 7 - i);
+                character += bit * pow(2, i);
             }
-            sym.push_back((char)character);
+            sym.push_back((unsigned char)character);
         }
     }
 
@@ -118,9 +118,9 @@ void trueDecompression(string inFileName, string outFileName) {
     getline(inFile, str);
     getline(inFile, str);
 
-    // read structure code
-    tree->rebuildAll(sym, vec);
+    // rebuild the HCTree
 
+    tree->rebuildAll(sym, vec);
     ofstream outFile;
     outFile.open(outFileName);
     BitInputStream* bodyIn = new BitInputStream(inFile, 10);
@@ -129,13 +129,7 @@ void trueDecompression(string inFileName, string outFileName) {
 
     while (countInd < theCount) {
         byte symbol = tree->decode(*bodyIn);
-        // if (bodyIn.eof()) break;
-        // if (bodyIn.lastBuf &&
-        //     stopBit == (bodyIn.curBit() - 8 * (bodyIn.lastCount - 1))) {
-        //     std::cout << "last buffer" << endl;
-        //     break;
-        // }
-        // std::cout << symbol << endl;
+        if (bodyIn->eof()) break;
         outFile.put(symbol);
         countInd++;
     }

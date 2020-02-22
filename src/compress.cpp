@@ -12,6 +12,8 @@
 #include "HCTree.hpp"
 #include "cxxopts.hpp"
 
+#define NEWLINE '\n'
+
 /* TODO: add pseudo compression with ascii encoding and naive header
  * (checkpoint) */
 void pseudoCompression(string inFileName, string outFileName) {
@@ -44,7 +46,7 @@ void pseudoCompression(string inFileName, string outFileName) {
 
     for (int i : vec) {
         outFile << i;
-        outFile << '\n';
+        outFile << NEWLINE;
     }
 
     theFile.open(inFileName);
@@ -83,7 +85,6 @@ void trueCompression(string inFileName, string outFileName) {
         vec.at(nextChar) += 1;
         count++;
     }
-
     theFile.close();
 
     tree->build(vec);
@@ -91,17 +92,17 @@ void trueCompression(string inFileName, string outFileName) {
     ofstream outFile;
     outFile.open(outFileName, ios::trunc);
 
-    BitOutputStream* bitos = new BitOutputStream(outFile, 40000000);
+    BitOutputStream* bitos = new BitOutputStream(outFile, 4000);
 
     // header
     // write symbols from left to right to outfile
     // traverse the tree and write bit to buffer
     vector<unsigned int> vect;
-    vector<char> sym;
+    vector<unsigned char> sym;
     tree->traverseAll(sym, vect);
 
     outFile << count;
-    outFile << '\n';
+    outFile << NEWLINE;
 
     int symIndex = 0;
     for (unsigned int i : vect) {
@@ -114,7 +115,7 @@ void trueCompression(string inFileName, string outFileName) {
         }
     }
     bitos->flush();
-    outFile.put('\n');
+    outFile.put(NEWLINE);
 
     // body
     theFile.open(inFileName);

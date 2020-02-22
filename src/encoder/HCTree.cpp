@@ -235,11 +235,12 @@ byte HCTree::decode(istream& in) const {
  */
 bool HCTree::empty() { return root == 0; }
 
-void HCTree::traverseAll(vector<char>& sym, vector<unsigned int>& vec) {
+void HCTree::traverseAll(vector<unsigned char>& sym,
+                         vector<unsigned int>& vec) {
     traverse(sym, vec, root);
 }
 
-void HCTree::traverse(vector<char>& sym, vector<unsigned int>& vec,
+void HCTree::traverse(vector<unsigned char>& sym, vector<unsigned int>& vec,
                       HCNode* node) {
     if (node->c0 != 0 && node->c1 != 0) {
         vec.push_back(1);
@@ -252,13 +253,13 @@ void HCTree::traverse(vector<char>& sym, vector<unsigned int>& vec,
     }
 }
 
-void HCTree::rebuildAll(vector<char>& sym, vector<unsigned int>& vec) {
+void HCTree::rebuildAll(vector<unsigned char>& sym, vector<unsigned int>& vec) {
     root = new HCNode(0, 0, 0, 0, 0);
     rebuild(sym, vec, root, 0, 0);
 }
 
-void HCTree::rebuild(vector<char>& sym, vector<unsigned int>& vec, HCNode* node,
-                     int symInd, int vecInd) {
+void HCTree::rebuild(vector<unsigned char>& sym, vector<unsigned int>& vec,
+                     HCNode* node, int symInd, int vecInd) {
     unsigned int bit = vec[0];
     vec.erase(vec.begin());
     // vecInd++;
