@@ -12,6 +12,9 @@ void BitInputStream::fill() {
     unsigned int zero = 0;
     std::fill(&buf[0], &buf[bufSize], zero);
     in.read(buf, bufSize);
+    int numRead = in.gcount();
+    std::cout << numRead << endl;
+    std::cout << "^ if gcount " << endl;
     nbits = 0;
 }
 
@@ -22,10 +25,12 @@ void BitInputStream::fill() {
  */
 bool BitInputStream::atEndOfFile() {
     int numRead = in.gcount();
+    std::cout << numRead << endl;
     // istream tried to read more than remaining bytes
     if (!in) {
         // buf was then fully read
         if (numRead == 0 || numRead * 8 == nbits) {
+            std::cout << "atendofFile true" << endl;
             return true;
         }
     }
@@ -44,6 +49,7 @@ unsigned int BitInputStream::readBit() {
 
     // set eofbit and return 0;
     if (atEndOfFile()) {
+        std::cout << "end of file" << endl;
         eofBit = true;
         return 0;
     }
@@ -54,3 +60,24 @@ unsigned int BitInputStream::readBit() {
     nbits++;
     return (buf[byteIndex] >> 7 - bitIndex) & 1;
 }
+
+unsigned int BitInputStream::readBitHeader() {
+    // fill the buf if all bits in buf has been read
+    if (bufSize * 8 == nbits) {
+        eofHeaderBit = true;
+    }
+
+    // set eofbit and return 0;
+    if (atEndOfFile()) {
+        eofBit = true;
+        return 0;
+    }
+
+    // find the index and read the bit
+    int byteIndex = nbits / 8;
+    int bitIndex = nbits % 8;
+
+    nbits++;
+    return (buf[byteIndex] >> 7 - bitIndex) & 1;
+}
+bool BitInputStream::eofHeader() { return eofHeaderBit; }

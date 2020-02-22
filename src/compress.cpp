@@ -64,7 +64,6 @@ void pseudoCompression(string inFileName, string outFileName) {
 void trueCompression(string inFileName, string outFileName) {
     // if input is emptyfile, outfile will be empty
     if (FileUtils::isEmptyFile(inFileName)) {
-        std::cout << "empty file" << endl;
         ofstream outFile;
         outFile.open(outFileName);
         outFile.close();
@@ -77,6 +76,8 @@ void trueCompression(string inFileName, string outFileName) {
     unsigned char nextChar;
     int nextByte;
     theFile.open(inFileName, ios::binary);
+
+    // fill frequency vector
     vector<unsigned int> vec(256);
     while ((nextByte = theFile.get()) != EOF) {
         nextChar = (unsigned int)nextByte;
@@ -99,16 +100,16 @@ void trueCompression(string inFileName, string outFileName) {
     vector<char> sym;
     tree->traverseAll(sym, vect);
 
-    // write the number of symbols / 1 byte
-    outFile.put(sym.size() - 1);
-
-    for (char j : sym) {
-        outFile.put(j);
-    }
-
     for (unsigned int i : vect) {
         bitos.writeBit(i);
+        if (i == 0) {
+            for (int j = 0; j < 8; j++) {
+                bitos.writeBit(sym[0] >> (7 - j) & 1);
+            }
+            sym.erase(sym.begin());
+        }
     }
+    bitos.flush();
     outFile.put('\n');
 
     // body
@@ -152,5 +153,7 @@ int main(int argc, char* argv[]) {
 
     if (isAsciiOutput) {
         pseudoCompression(inFileName, outFileName);
+    } else {
+        trueCompression(inFileName, outFileName);
     }
 }

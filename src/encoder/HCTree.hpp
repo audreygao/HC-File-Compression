@@ -69,6 +69,8 @@ class HCTree {
     bool empty();
     void traverseAll(vector<char>& sym, vector<unsigned int>& vec);
     void traverse(vector<char>& sym, vector<unsigned int>& vec, HCNode* node);
-    void rebuild(vector<char>& sym, vector<unsigned int>& vec, HCNode* node);
+    void rebuildAll(vector<char>& sym, vector<unsigned int>& vec);
+    void rebuild(vector<char>& sym, vector<unsigned int>& vec, HCNode* node,
+                 int symInd, int vecInd);
 };
 #endif  // HCTREE_HPP

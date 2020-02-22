@@ -20,6 +20,7 @@ class BitInputStream {
     unsigned int bufSize;  // size of buffer in byte
     unsigned int nbits;    // number of bits that have been read from buf
     bool eofBit;           // true when trying to read past the end of the file
+    bool eofHeaderBit;
 
     /* TODO: add function header */
     bool atEndOfFile();
@@ -38,6 +39,14 @@ class BitInputStream {
         nbits = 0;
         eofBit = false;
     };
+    explicit BitInputStream(istream& is, unsigned int bufSize, char* buffer)
+        : in(is) {
+        buf = buffer;
+        this->bufSize = bufSize;
+        nbits = 0;
+        eofBit = false;
+        eofHeaderBit = false;
+    };
 
     /**
      * Fill the buffer of size bufSize from input stream
@@ -48,9 +57,10 @@ class BitInputStream {
      * true when we are trying to read past the end of the file
      */
     bool eof();
+    bool eofHeader();
 
     /* TODO: add function header */
     unsigned int readBit();
+    unsigned int readBitHeader();
 };
-
 #endif

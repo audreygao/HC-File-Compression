@@ -255,19 +255,37 @@ void HCTree::traverse(vector<char>& sym, vector<unsigned int>& vec,
     }
 }
 
-void HCTree::rebuild(vector<char>& sym, vector<unsigned int>& vec,
-                     HCNode* node) {
-    unsigned int bit = vec[0];
-    vec.erase(vec.begin());
+void HCTree::rebuildAll(vector<char>& sym, vector<unsigned int>& vec) {
+    root = new HCNode(0, 0, 0, 0, 0);
+    rebuild(sym, vec, root, 0, 0);
+}
+
+void HCTree::rebuild(vector<char>& sym, vector<unsigned int>& vec, HCNode* node,
+                     int symInd, int vecInd) {
+    if (vec.size() > 0) {
+        std::cout << "vec has something" << endl;
+    }
+
+    unsigned int bit = vec[vecInd];
+    vecInd++;
+    std::cout << "1" << endl;
+    // vec.erase(vec.begin());
 
     if (bit == 0) {
-        node->symbol = sym[0];
-        sym.erase(sym.begin());
+        std::cout << "2" << endl;
+        node->symbol = sym[symInd];
+        symInd++;
+        // sym.erase(sym.begin());
         return;
     }
 
     node->c0 = new HCNode(0, 0, 0, 0, 0);
+    node->c0->p = node;
     node->c1 = new HCNode(0, 0, 0, 0, 0);
-    rebuild(sym, vec, node->c0);
-    rebuild(sym, vec, node->c1);
+    node->c1->p = node;
+    std::cout << "3" << endl;
+    rebuild(sym, vec, node->c0, symInd, vecInd);
+    std::cout << "4" << endl;
+    rebuild(sym, vec, node->c1, symInd, vecInd);
+    std::cout << "one full recursion" << endl;
 }

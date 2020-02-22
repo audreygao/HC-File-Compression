@@ -3,9 +3,10 @@
  * Email: yag003@ucsd.edu, q4xu@ucsd.edu
  * Description:
  */
+#include <math.h>
 #include <fstream>
 #include <iostream>
-
+#include <vector>
 #include "FileUtils.hpp"
 #include "HCNode.hpp"
 #include "HCTree.hpp"
@@ -59,23 +60,69 @@ void trueDecompression(string inFileName, string outFileName) {
         outFile.open(outFileName);
         outFile.close();
     }
+
+    std::cout << "a" << endl;
     HCTree* tree = new HCTree();
     ifstream inFile;
     inFile.open(inFileName);
 
-    BitInputStream bitos(inFile, 4000);
+    std::cout << "b" << endl;
 
-    /// get an int: TODO
-    unsigned int numSym = inFile.get() + 1;
+    // decode header
+    char charBuf[768];
+    std::cout << "b1" << endl;
+    inFile.getline(charBuf, 768);
+    std::cout << "b2" << endl;
+    BitInputStream headerIn(inFile, 768, charBuf);
+
+    std::cout << "c" << endl;
+
+    vector<char> sym;
     vector<unsigned int> vec;
-    vector<char> sym(numSym);
+    unsigned int bit;
+    unsigned int character = 0;
 
-    // read the symbols into vector
-    for (int i = 0; i < numSym; i++) {
-        sym[i] = inFile.get();
+    std::cout << "d" << endl;
+    while (!headerIn.eofHeader()) {
+        bit = headerIn.readBitHeader();
+        vec.push_back(bit);
+
+        std::cout << "e" << endl;
+
+        if (bit == 0) {
+            for (int i = 0; i < 8; i++) {
+                bit = headerIn.readBitHeader();
+                character += bit * pow(2, 7 - i);
+
+                std::cout << "f" << endl;
+            }
+            sym.push_back((char)character);
+        }
     }
 
+    std::cout << "before rebuild" << endl;
+
     // read structure code
+    tree->rebuildAll(sym, vec);
+
+    std::cout << "g" << endl;
+
+    ofstream outFile;
+    outFile.open(outFileName);
+    BitInputStream bodyIn(inFile, 4000);
+
+    while (1) {
+        byte symbol = tree->decode(bodyIn);
+        std::cout << "after decode" << endl;
+        outFile.put(symbol);
+        if (bodyIn.eof()) break;
+        // outFile.put(symbol);
+        std::cout << "h" << endl;
+    }
+    outFile.close();
+    inFile.close();
+    delete tree;
+    std::cout << "i" << endl;
 }
 
 /* TODO: Main program that runs the uncompress */
@@ -104,5 +151,7 @@ int main(int argc, char* argv[]) {
 
     if (isAsciiOutput) {
         pseudoDecompression(inFileName, outFileName);
+    } else {
+        trueDecompression(inFileName, outFileName);
     }
 }
