@@ -91,7 +91,7 @@ void trueCompression(string inFileName, string outFileName) {
     ofstream outFile;
     outFile.open(outFileName, ios::trunc);
 
-    BitOutputStream* bitos = new BitOutputStream(outFile, 4000);
+    BitOutputStream* bitos = new BitOutputStream(outFile, 40000000);
 
     // header
     // write symbols from left to right to outfile

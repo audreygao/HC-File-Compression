@@ -30,7 +30,7 @@ class BitOutputStream {
     explicit BitOutputStream(ostream& os, unsigned int bufSize) : out(os) {
         buf = new char[bufSize];
         unsigned int zero = 0;
-        fill(&buf[0], &buf[bufSize], zero);
+        std::fill(&buf[0], &buf[bufSize], zero);
         this->bufSize = bufSize;
         nbits = 0;
     };

@@ -25,6 +25,7 @@ void pseudoDecompression(string inFileName, string outFileName) {
         ofstream outFile;
         outFile.open(outFileName);
         outFile.close();
+        return;
     }
 
     HCTree* tree = new HCTree();
@@ -71,6 +72,7 @@ void trueDecompression(string inFileName, string outFileName) {
         ofstream outFile;
         outFile.open(outFileName);
         outFile.close();
+        return;
     }
 
     HCTree* tree = new HCTree();
@@ -84,9 +86,12 @@ void trueDecompression(string inFileName, string outFileName) {
     int theCount;
     theCount = stoi(count);
 
-    char charBuf[800];
+    char* charBuf = new char[800];
+    unsigned int zero = 0;
+    std::fill(&charBuf[0], &charBuf[800], zero);
     inFile.getline(charBuf, 800);
     BitInputStream* headerIn = new BitInputStream(inFile, 800, charBuf);
+    // BitInputStream headerIn(inFile, 800, charBuf);
 
     vector<char> sym;
     vector<unsigned int> vec;
@@ -118,7 +123,7 @@ void trueDecompression(string inFileName, string outFileName) {
 
     ofstream outFile;
     outFile.open(outFileName);
-    BitInputStream* bodyIn = new BitInputStream(inFile, 4000);
+    BitInputStream* bodyIn = new BitInputStream(inFile, 10);
 
     int countInd = 0;
 
