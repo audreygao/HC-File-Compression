@@ -76,12 +76,13 @@ void trueCompression(string inFileName, string outFileName) {
     unsigned char nextChar;
     int nextByte;
     theFile.open(inFileName, ios::binary);
-
+    unsigned int count = 0;
     // fill frequency vector
     vector<unsigned int> vec(256);
     while ((nextByte = theFile.get()) != EOF) {
         nextChar = (unsigned int)nextByte;
         vec.at(nextChar) += 1;
+        count++;
     }
 
     theFile.close();
@@ -100,19 +101,39 @@ void trueCompression(string inFileName, string outFileName) {
     vector<char> sym;
     tree->traverseAll(sym, vect);
 
-    // write the 3 bits of the stopBit to header
-    unsigned int stopBit = bitos.stopBit;
-    for (int i = 0; i < 3; i++) {
-        bitos.writeBit((stopBit >> (2 - i)) & 1);
+    for (unsigned int i : vect) {
+        std::cout << i << endl;
+    }
+    for (char i : sym) {
+        std::cout << i << endl;
     }
 
+    // // write the 3 bits of the stopBit to header
+    // unsigned int stopBit = bitos.stopBit;
+    // std::cout << stopBit << endl;
+    // std::cout << "stopBit^" << endl;
+    // for (int i = 0; i < 3; i++) {
+    //     bitos.writeBit((stopBit >> (2 - i)) & 1);
+    // }
+
+    // string stringCount = std::to_string(count);
+    // for(int i = 0; i < 5; i++) {
+
+    // }
+
+    outFile << count;
+    outFile << '\n';
+
+    // outFile.put(count);  // 4 byte
+    // outFile.put('\n');
+    int symIndex = 0;
     for (unsigned int i : vect) {
         bitos.writeBit(i);
         if (i == 0) {
             for (int j = 0; j < 8; j++) {
-                bitos.writeBit(sym[0] >> (7 - j) & 1);
+                bitos.writeBit(sym[symIndex] >> (7 - j) & 1);
             }
-            sym.erase(sym.begin());
+            symIndex++;
         }
     }
     bitos.flush();

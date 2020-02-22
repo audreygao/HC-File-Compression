@@ -183,7 +183,7 @@ byte HCTree::decode(BitInputStream& in) const {
     // loop till the leave
     while (cur != nullptr) {
         bitInt = in.readBit();
-
+        // std::cout << bitInt << endl;
         // decide which branch to go
         if (bitInt == 0) {
             cur = cur->c0;
@@ -195,7 +195,7 @@ byte HCTree::decode(BitInputStream& in) const {
             break;
         }
     }
-
+    // std::cout << cur->symbol << endl;
     // return founded leave
     return cur->symbol;
 }
@@ -217,7 +217,6 @@ byte HCTree::decode(istream& in) const {
     // loop till the leave
     while (cur != nullptr) {
         nextChar = in.get();
-
         // decide which branch to go
         if (nextChar == '0') {
             cur = cur->c0;
@@ -263,20 +262,15 @@ void HCTree::rebuildAll(vector<char>& sym, vector<unsigned int>& vec) {
 
 void HCTree::rebuild(vector<char>& sym, vector<unsigned int>& vec, HCNode* node,
                      int symInd, int vecInd) {
-    if (vec.size() > 0) {
-        // std::cout << "vec has something" << endl;
-    }
-
-    unsigned int bit = vec[vecInd];
-    vecInd++;
-    // std::cout << "1" << endl;
-    // vec.erase(vec.begin());
-
+    unsigned int bit = vec[0];
+    vec.erase(vec.begin());
+    // vecInd++;
+    std::cout << bit << endl;
     if (bit == 0) {
-        // std::cout << "2" << endl;
-        node->symbol = sym[symInd];
-        symInd++;
-        // sym.erase(sym.begin());
+        node->symbol = sym[0];
+        // symInd++;
+        leaves.push_back(node);
+        sym.erase(sym.begin());
         return;
     }
 

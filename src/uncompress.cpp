@@ -69,11 +69,17 @@ void trueDecompression(string inFileName, string outFileName) {
     // std::cout << "b" << endl;
 
     // decode header
-    char charBuf[768];
+    string count;
+    getline(inFile, count);
+    count.substr(0, count.size() - 1);
+    int theCount;
+    theCount = stoi(count);
+
+    char charBuf[800];
     // std::cout << "b1" << endl;
-    inFile.getline(charBuf, 768);
+    inFile.getline(charBuf, 800);
     // std::cout << "b2" << endl;
-    BitInputStream headerIn(inFile, 768, charBuf);
+    BitInputStream headerIn(inFile, 800, charBuf);
 
     // std::cout << "c" << endl;
 
@@ -82,12 +88,14 @@ void trueDecompression(string inFileName, string outFileName) {
     unsigned int bit;
     unsigned int character = 0;
 
-    // decode the stopBit from header
-    unsigned int stopBit = 0;
-    for (int i = 2; i >= 0; i--) {
-        bit = headerIn.readBitHeader();
-        stopBit += bit * pow(2, i);
-    }
+    // // decode the stopBit from header
+    // unsigned int stopBit = 0;
+    // for (int i = 2; i >= 0; i--) {
+    //     bit = headerIn.readBitHeader();
+    //     std::cout << bit << endl;
+    //     std::cout << "each bit of stop bit ^" << endl;
+    //     stopBit += bit * pow(2, i);
+    // }
 
     // std::cout << stopBit << endl;
 
@@ -95,10 +103,12 @@ void trueDecompression(string inFileName, string outFileName) {
     while (!headerIn.eofHeader()) {
         bit = headerIn.readBitHeader();
         vec.push_back(bit);
-
+        // std::cout << "structure bit:" << endl;
+        // std::cout << bit << endl;
         // std::cout << "e" << endl;
 
         if (bit == 0) {
+            character = 0;
             for (int i = 0; i < 8; i++) {
                 bit = headerIn.readBitHeader();
                 character += bit * pow(2, 7 - i);
@@ -113,8 +123,16 @@ void trueDecompression(string inFileName, string outFileName) {
     inFile.open(inFileName);
     string str;
     getline(inFile, str);
+    getline(inFile, str);
 
     // std::cout << "before rebuild" << endl;
+
+    for (unsigned int i : vec) {
+        std::cout << i << endl;
+    }
+    // for (char i : sym) {
+    //     std::cout << i << endl;
+    // }
 
     // read structure code
     tree->rebuildAll(sym, vec);
@@ -125,20 +143,25 @@ void trueDecompression(string inFileName, string outFileName) {
     outFile.open(outFileName);
     BitInputStream bodyIn(inFile, 4000);
 
-    while (1) {
+    std::cout << "the count of characrters is " << endl;
+    std::cout << theCount << endl;
+    int countInd = 0;
+
+    while (countInd < theCount) {
         byte symbol = tree->decode(bodyIn);
-        if (bodyIn.eof()) break;
-        if (bodyIn.lastBuf &&
-            stopBit == bodyIn.curBit() - 8 * (bodyIn.lastCount - 1)) {
-            std::cout << "last buffer" << endl;
-            break;
-        }
+        // if (bodyIn.eof()) break;
+        // if (bodyIn.lastBuf &&
+        //     stopBit == (bodyIn.curBit() - 8 * (bodyIn.lastCount - 1))) {
+        //     std::cout << "last buffer" << endl;
+        //     break;
+        // }
+        // std::cout << symbol << endl;
         outFile.put(symbol);
+        countInd++;
     }
     outFile.close();
     inFile.close();
     delete tree;
-    std::cout << "i" << endl;
 }
 
 /* TODO: Main program that runs the uncompress */
