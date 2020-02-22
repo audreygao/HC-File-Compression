@@ -13,8 +13,6 @@ void BitInputStream::fill() {
     std::fill(&buf[0], &buf[bufSize], zero);
     in.read(buf, bufSize);
     int numRead = in.gcount();
-    // std::cout << numRead << endl;
-    // std::cout << "^ if gcount " << endl;
 
     nbits = 0;
 }
@@ -27,13 +25,11 @@ void BitInputStream::fill() {
 bool BitInputStream::atEndOfFile() {
     int numRead = in.gcount();
     lastCount = numRead;
-    // std::cout << numRead << endl;
     // istream tried to read more than remaining bytes
     if (!in) {
         lastBuf = true;
         // buf was then fully read
         if (numRead == 0 || numRead * 8 == nbits) {
-            // std::cout << "atendofFile true" << endl;
             return true;
         }
     }
@@ -52,7 +48,6 @@ unsigned int BitInputStream::readBit() {
 
     // set eofbit and return 0;
     if (atEndOfFile()) {
-        // std::cout << "end of file" << endl;
         eofBit = true;
         return 0;
     }

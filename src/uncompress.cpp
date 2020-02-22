@@ -12,7 +12,12 @@
 #include "HCTree.hpp"
 #include "cxxopts.hpp"
 
-/* TODO: Pseudo decompression with ascii encoding and naive header (checkpoint)
+/**
+ * Compress data in inFileName using Huffman Encoding
+ * and write codes into outFileName
+ * param:
+ *  - inFileName: file to be compressed
+ *  - outFileName: the compressed file
  */
 void pseudoDecompression(string inFileName, string outFileName) {
     // if input is emptyfile, outfile will be empty
@@ -24,8 +29,11 @@ void pseudoDecompression(string inFileName, string outFileName) {
 
     HCTree* tree = new HCTree();
     vector<unsigned int> vec(256, 0);
-    ifstream inFile;
+
+    // string for the counts
     string str;
+
+    ifstream inFile;
     inFile.open(inFileName);
 
     // loop through the vector and add the count
@@ -38,10 +46,14 @@ void pseudoDecompression(string inFileName, string outFileName) {
         vec[i] = stoi(str);
     }
 
+    // build the tree using the frequency vector
     tree->build(vec);
-    ofstream outFile;
 
+    // open the outFile
+    ofstream outFile;
     outFile.open(outFileName);
+
+    // decode all characters in the inFile
     while (1) {
         byte symbol = tree->decode(inFile);
         if (inFile.eof()) break;
@@ -61,12 +73,9 @@ void trueDecompression(string inFileName, string outFileName) {
         outFile.close();
     }
 
-    // std::cout << "a" << endl;
     HCTree* tree = new HCTree();
     ifstream inFile;
     inFile.open(inFileName);
-
-    // std::cout << "b" << endl;
 
     // decode header
     string count;
@@ -76,44 +85,23 @@ void trueDecompression(string inFileName, string outFileName) {
     theCount = stoi(count);
 
     char charBuf[800];
-    // std::cout << "b1" << endl;
     inFile.getline(charBuf, 800);
-    // std::cout << "b2" << endl;
     BitInputStream headerIn(inFile, 800, charBuf);
-
-    // std::cout << "c" << endl;
 
     vector<char> sym;
     vector<unsigned int> vec;
     unsigned int bit;
     unsigned int character = 0;
 
-    // // decode the stopBit from header
-    // unsigned int stopBit = 0;
-    // for (int i = 2; i >= 0; i--) {
-    //     bit = headerIn.readBitHeader();
-    //     std::cout << bit << endl;
-    //     std::cout << "each bit of stop bit ^" << endl;
-    //     stopBit += bit * pow(2, i);
-    // }
-
-    // std::cout << stopBit << endl;
-
-    // std::cout << "d" << endl;
     while (!headerIn.eofHeader()) {
         bit = headerIn.readBitHeader();
         vec.push_back(bit);
-        // std::cout << "structure bit:" << endl;
-        // std::cout << bit << endl;
-        // std::cout << "e" << endl;
 
         if (bit == 0) {
             character = 0;
             for (int i = 0; i < 8; i++) {
                 bit = headerIn.readBitHeader();
                 character += bit * pow(2, 7 - i);
-
-                // std::cout << "f" << endl;
             }
             sym.push_back((char)character);
         }
@@ -125,26 +113,13 @@ void trueDecompression(string inFileName, string outFileName) {
     getline(inFile, str);
     getline(inFile, str);
 
-    // std::cout << "before rebuild" << endl;
-
-    for (unsigned int i : vec) {
-        std::cout << i << endl;
-    }
-    // for (char i : sym) {
-    //     std::cout << i << endl;
-    // }
-
     // read structure code
     tree->rebuildAll(sym, vec);
-
-    // std::cout << "g" << endl;
 
     ofstream outFile;
     outFile.open(outFileName);
     BitInputStream bodyIn(inFile, 4000);
 
-    std::cout << "the count of characrters is " << endl;
-    std::cout << theCount << endl;
     int countInd = 0;
 
     while (countInd < theCount) {

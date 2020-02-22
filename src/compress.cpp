@@ -17,7 +17,6 @@
 void pseudoCompression(string inFileName, string outFileName) {
     // if input is emptyfile, outfile will be empty
     if (FileUtils::isEmptyFile(inFileName)) {
-        std::cout << "empty file" << endl;
         ofstream outFile;
         outFile.open(outFileName);
         outFile.close();
@@ -101,31 +100,9 @@ void trueCompression(string inFileName, string outFileName) {
     vector<char> sym;
     tree->traverseAll(sym, vect);
 
-    for (unsigned int i : vect) {
-        std::cout << i << endl;
-    }
-    for (char i : sym) {
-        std::cout << i << endl;
-    }
-
-    // // write the 3 bits of the stopBit to header
-    // unsigned int stopBit = bitos.stopBit;
-    // std::cout << stopBit << endl;
-    // std::cout << "stopBit^" << endl;
-    // for (int i = 0; i < 3; i++) {
-    //     bitos.writeBit((stopBit >> (2 - i)) & 1);
-    // }
-
-    // string stringCount = std::to_string(count);
-    // for(int i = 0; i < 5; i++) {
-
-    // }
-
     outFile << count;
     outFile << '\n';
 
-    // outFile.put(count);  // 4 byte
-    // outFile.put('\n');
     int symIndex = 0;
     for (unsigned int i : vect) {
         bitos.writeBit(i);

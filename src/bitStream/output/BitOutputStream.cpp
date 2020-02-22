@@ -14,8 +14,6 @@ void BitOutputStream::flush() {
     if (nbits % 8 != 0) {
         flushSize++;
     }
-    std::cout << flushSize << endl;
-    std::cout << "entered flush" << endl;
     out.write(buf, flushSize);
     stopBit = nbits % 8;
     nbits = 0;
