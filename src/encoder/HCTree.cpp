@@ -83,6 +83,7 @@ void HCTree::encode(byte symbol, BitOutputStream& out) const {
 
     // if only a root / only 1 type of symbol in file
     if (root->c0 == 0 && root->c1 == 0) {
+        std::cout << "encoded with 0" << endl;
         out.writeBit(0);
         return;
     }
@@ -263,16 +264,16 @@ void HCTree::rebuildAll(vector<char>& sym, vector<unsigned int>& vec) {
 void HCTree::rebuild(vector<char>& sym, vector<unsigned int>& vec, HCNode* node,
                      int symInd, int vecInd) {
     if (vec.size() > 0) {
-        std::cout << "vec has something" << endl;
+        // std::cout << "vec has something" << endl;
     }
 
     unsigned int bit = vec[vecInd];
     vecInd++;
-    std::cout << "1" << endl;
+    // std::cout << "1" << endl;
     // vec.erase(vec.begin());
 
     if (bit == 0) {
-        std::cout << "2" << endl;
+        // std::cout << "2" << endl;
         node->symbol = sym[symInd];
         symInd++;
         // sym.erase(sym.begin());
@@ -283,9 +284,9 @@ void HCTree::rebuild(vector<char>& sym, vector<unsigned int>& vec, HCNode* node,
     node->c0->p = node;
     node->c1 = new HCNode(0, 0, 0, 0, 0);
     node->c1->p = node;
-    std::cout << "3" << endl;
+    // std::cout << "3" << endl;
     rebuild(sym, vec, node->c0, symInd, vecInd);
-    std::cout << "4" << endl;
+    // std::cout << "4" << endl;
     rebuild(sym, vec, node->c1, symInd, vecInd);
-    std::cout << "one full recursion" << endl;
+    // std::cout << "one full recursion" << endl;
 }

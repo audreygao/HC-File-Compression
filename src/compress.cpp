@@ -100,6 +100,12 @@ void trueCompression(string inFileName, string outFileName) {
     vector<char> sym;
     tree->traverseAll(sym, vect);
 
+    // write the 3 bits of the stopBit to header
+    unsigned int stopBit = bitos.stopBit;
+    for (int i = 0; i < 3; i++) {
+        bitos.writeBit((stopBit >> (2 - i)) & 1);
+    }
+
     for (unsigned int i : vect) {
         bitos.writeBit(i);
         if (i == 0) {
@@ -119,6 +125,7 @@ void trueCompression(string inFileName, string outFileName) {
         if (theFile.eof()) break;
         tree->encode(nextChar, bitos);
     }
+    bitos.flush();
     theFile.close();
 
     outFile.close();

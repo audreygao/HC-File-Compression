@@ -61,51 +61,65 @@ void trueDecompression(string inFileName, string outFileName) {
         outFile.close();
     }
 
-    std::cout << "a" << endl;
+    // std::cout << "a" << endl;
     HCTree* tree = new HCTree();
     ifstream inFile;
     inFile.open(inFileName);
 
-    std::cout << "b" << endl;
+    // std::cout << "b" << endl;
 
     // decode header
     char charBuf[768];
-    std::cout << "b1" << endl;
+    // std::cout << "b1" << endl;
     inFile.getline(charBuf, 768);
-    std::cout << "b2" << endl;
+    // std::cout << "b2" << endl;
     BitInputStream headerIn(inFile, 768, charBuf);
 
-    std::cout << "c" << endl;
+    // std::cout << "c" << endl;
 
     vector<char> sym;
     vector<unsigned int> vec;
     unsigned int bit;
     unsigned int character = 0;
 
-    std::cout << "d" << endl;
+    // decode the stopBit from header
+    unsigned int stopBit = 0;
+    for (int i = 2; i >= 0; i--) {
+        bit = headerIn.readBitHeader();
+        stopBit += bit * pow(2, i);
+    }
+
+    // std::cout << stopBit << endl;
+
+    // std::cout << "d" << endl;
     while (!headerIn.eofHeader()) {
         bit = headerIn.readBitHeader();
         vec.push_back(bit);
 
-        std::cout << "e" << endl;
+        // std::cout << "e" << endl;
 
         if (bit == 0) {
             for (int i = 0; i < 8; i++) {
                 bit = headerIn.readBitHeader();
                 character += bit * pow(2, 7 - i);
 
-                std::cout << "f" << endl;
+                // std::cout << "f" << endl;
             }
             sym.push_back((char)character);
         }
     }
 
-    std::cout << "before rebuild" << endl;
+    inFile.close();
+    inFile.open(inFileName);
+    string str;
+    getline(inFile, str);
+
+    // std::cout << "before rebuild" << endl;
 
     // read structure code
     tree->rebuildAll(sym, vec);
 
-    std::cout << "g" << endl;
+    // std::cout << "g" << endl;
 
     ofstream outFile;
     outFile.open(outFileName);
@@ -113,11 +127,13 @@ void trueDecompression(string inFileName, string outFileName) {
 
     while (1) {
         byte symbol = tree->decode(bodyIn);
-        std::cout << "after decode" << endl;
-        outFile.put(symbol);
         if (bodyIn.eof()) break;
-        // outFile.put(symbol);
-        std::cout << "h" << endl;
+        if (bodyIn.lastBuf &&
+            stopBit == bodyIn.curBit() - 8 * (bodyIn.lastCount - 1)) {
+            std::cout << "last buffer" << endl;
+            break;
+        }
+        outFile.put(symbol);
     }
     outFile.close();
     inFile.close();

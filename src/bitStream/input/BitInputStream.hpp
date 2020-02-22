@@ -26,6 +26,8 @@ class BitInputStream {
     bool atEndOfFile();
 
   public:
+    bool lastBuf = false;
+    unsigned int lastCount = 0;
     /**
      * Initializes member variables.
      * the char array should have size bufSize.
@@ -62,5 +64,6 @@ class BitInputStream {
     /* TODO: add function header */
     unsigned int readBit();
     unsigned int readBitHeader();
+    unsigned int curBit();
 };
 #endif

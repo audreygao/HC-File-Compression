@@ -19,9 +19,9 @@ class BitOutputStream {
     char* buf;             // buffer of an char array
     unsigned int bufSize;  // size of buffer in byte
     unsigned int nbits;    // number of bits have been writen to buf
-    unsigned int isize;
 
   public:
+    unsigned int stopBit;  // index of bit past last written bit
     /**
      * Initializes member variables of BitOutputStream
      * param: - os: output stream to use
