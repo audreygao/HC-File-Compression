@@ -6,14 +6,16 @@
 #include "BitInputStream.hpp"
 #include <algorithm>
 
-/* TODO */
+/**
+ * Fill the buffer by reading from the istream
+ * Zero fill the buffer before filling
+ * And set nbits to 0
+ */
 void BitInputStream::fill() {
     // read <= bufsize number of bytes from istream into buf
     unsigned int zero = 0;
     std::fill(&buf[0], &buf[bufSize], zero);
     in.read(buf, bufSize);
-    int numRead = in.gcount();
-
     nbits = 0;
 }
 
@@ -24,10 +26,8 @@ void BitInputStream::fill() {
  */
 bool BitInputStream::atEndOfFile() {
     int numRead = in.gcount();
-    lastCount = numRead;
     // istream tried to read more than remaining bytes
     if (!in) {
-        lastBuf = true;
         // buf was then fully read
         if (numRead == 0 || numRead * 8 == nbits) {
             return true;
@@ -39,7 +39,12 @@ bool BitInputStream::atEndOfFile() {
 /* Returns true when trying to read past the end of the file, false otherwise */
 bool BitInputStream::eof() { return eofBit; }
 
-/* TODO */
+/**
+ * read the bit at nBits in the buffer
+ * Return 1 if the bit value is 1 and 0 if bit is 0
+ * If buffer is fully read, fill the buffer
+ * If atEndOfFile is true, set the eofBit
+ */
 unsigned int BitInputStream::readBit() {
     // fill the buf if all bits in buf has been read
     if (bufSize * 8 == nbits) {
@@ -59,6 +64,12 @@ unsigned int BitInputStream::readBit() {
     return (buf[byteIndex] >> 7 - bitIndex) & 1;
 }
 
+/**
+ * read the bit at nBits in the buffer for header
+ * Return 1 if the bit value is 1 and 0 if bit is 0
+ * If buffer is fully read, meaning header has been fully read
+ * If atEndOfFile is true, set the eofBit
+ */
 unsigned int BitInputStream::readBitHeader() {
     // fill the buf if all bits in buf has been read
     if (bufSize * 8 == nbits) {
@@ -76,7 +87,10 @@ unsigned int BitInputStream::readBitHeader() {
     int bitIndex = nbits % 8;
 
     nbits++;
+
+    // return the least significant bit
     return (buf[byteIndex] >> 7 - bitIndex) & 1;
 }
 bool BitInputStream::eofHeader() { return eofHeaderBit; }
-unsigned int BitInputStream::curBit() { return nbits; }
+
+BitInputStream::~BitInputStream() { delete[] buf; }

@@ -35,6 +35,8 @@ class BitOutputStream {
         nbits = 0;
     };
 
+    ~BitOutputStream();
+
     /**
      * Write the part of buffer that was written by the user to the output
      * stream and clear the buffer

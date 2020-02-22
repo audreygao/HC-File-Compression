@@ -91,7 +91,7 @@ void trueCompression(string inFileName, string outFileName) {
     ofstream outFile;
     outFile.open(outFileName, ios::trunc);
 
-    BitOutputStream bitos(outFile, 4000);
+    BitOutputStream* bitos = new BitOutputStream(outFile, 4000);
 
     // header
     // write symbols from left to right to outfile
@@ -105,15 +105,15 @@ void trueCompression(string inFileName, string outFileName) {
 
     int symIndex = 0;
     for (unsigned int i : vect) {
-        bitos.writeBit(i);
+        bitos->writeBit(i);
         if (i == 0) {
             for (int j = 0; j < 8; j++) {
-                bitos.writeBit(sym[symIndex] >> (7 - j) & 1);
+                bitos->writeBit(sym[symIndex] >> (7 - j) & 1);
             }
             symIndex++;
         }
     }
-    bitos.flush();
+    bitos->flush();
     outFile.put('\n');
 
     // body
@@ -121,12 +121,13 @@ void trueCompression(string inFileName, string outFileName) {
     while (1) {
         nextChar = theFile.get();
         if (theFile.eof()) break;
-        tree->encode(nextChar, bitos);
+        tree->encode(nextChar, *bitos);
     }
-    bitos.flush();
+    bitos->flush();
     theFile.close();
 
     outFile.close();
+    delete bitos;
     delete tree;
 }
 

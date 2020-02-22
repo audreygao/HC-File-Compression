@@ -20,14 +20,16 @@ class BitInputStream {
     unsigned int bufSize;  // size of buffer in byte
     unsigned int nbits;    // number of bits that have been read from buf
     bool eofBit;           // true when trying to read past the end of the file
-    bool eofHeaderBit;
+    bool eofHeaderBit = false;
 
-    /* TODO: add function header */
+    /**
+     * Return true when istream tried to read more bytes than the remaining byte
+     * in the file AND the buffer was then also fully read. Otherwise, return
+     * false
+     */
     bool atEndOfFile();
 
   public:
-    bool lastBuf = false;
-    unsigned int lastCount = 0;
     /**
      * Initializes member variables.
      * the char array should have size bufSize.
@@ -41,6 +43,16 @@ class BitInputStream {
         nbits = 0;
         eofBit = false;
     };
+    ~BitInputStream();
+
+    /**
+     * Constructor that initialize a BitInputStream
+     * with its buf to a given buf (for header encoding)
+     * param:
+     *  - is: istream to input from
+     *  - bufSize of the buf
+     *  - buffer: buffer to set the buf to
+     */
     explicit BitInputStream(istream& is, unsigned int bufSize, char* buffer)
         : in(is) {
         buf = buffer;
@@ -64,6 +76,5 @@ class BitInputStream {
     /* TODO: add function header */
     unsigned int readBit();
     unsigned int readBitHeader();
-    unsigned int curBit();
 };
 #endif

@@ -86,21 +86,21 @@ void trueDecompression(string inFileName, string outFileName) {
 
     char charBuf[800];
     inFile.getline(charBuf, 800);
-    BitInputStream headerIn(inFile, 800, charBuf);
+    BitInputStream* headerIn = new BitInputStream(inFile, 800, charBuf);
 
     vector<char> sym;
     vector<unsigned int> vec;
-    unsigned int bit;
+    unsigned int bit = 0;
     unsigned int character = 0;
 
-    while (!headerIn.eofHeader()) {
-        bit = headerIn.readBitHeader();
+    while (!headerIn->eofHeader()) {
+        bit = headerIn->readBitHeader();
         vec.push_back(bit);
 
         if (bit == 0) {
             character = 0;
             for (int i = 0; i < 8; i++) {
-                bit = headerIn.readBitHeader();
+                bit = headerIn->readBitHeader();
                 character += bit * pow(2, 7 - i);
             }
             sym.push_back((char)character);
@@ -109,7 +109,7 @@ void trueDecompression(string inFileName, string outFileName) {
 
     inFile.close();
     inFile.open(inFileName);
-    string str;
+    string str = "";
     getline(inFile, str);
     getline(inFile, str);
 
@@ -118,12 +118,12 @@ void trueDecompression(string inFileName, string outFileName) {
 
     ofstream outFile;
     outFile.open(outFileName);
-    BitInputStream bodyIn(inFile, 4000);
+    BitInputStream* bodyIn = new BitInputStream(inFile, 4000);
 
     int countInd = 0;
 
     while (countInd < theCount) {
-        byte symbol = tree->decode(bodyIn);
+        byte symbol = tree->decode(*bodyIn);
         // if (bodyIn.eof()) break;
         // if (bodyIn.lastBuf &&
         //     stopBit == (bodyIn.curBit() - 8 * (bodyIn.lastCount - 1))) {
@@ -136,6 +136,8 @@ void trueDecompression(string inFileName, string outFileName) {
     }
     outFile.close();
     inFile.close();
+    delete headerIn;
+    delete bodyIn;
     delete tree;
 }
 

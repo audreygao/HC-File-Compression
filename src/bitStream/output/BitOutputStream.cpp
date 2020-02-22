@@ -33,3 +33,5 @@ void BitOutputStream::writeBit(unsigned int i) {
     buf[byteIndex] = buf[byteIndex] | i;
     nbits++;
 }
+
+BitOutputStream::~BitOutputStream() { delete[] buf; }
